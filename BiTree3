@@ -1,0 +1,103 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
+
+class Node {
+    Node left, right;
+    int value;
+
+    Node(int value) {
+        left = right = null;
+        this.value = value;
+    }
+}
+
+public class BiTree3 {
+
+
+
+    Node root;
+
+    int height() {
+        return height(root);
+    }
+
+    int height(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        return 1 + Math.max(height(node.left), height(node.right));
+    }
+
+    boolean isBalanced (Node node) {
+        int left;
+        int right;
+
+        if (node == null) {
+            return true;
+        }
+
+        left = height(node.left);
+        right = height(node.right);
+
+        if (Math.abs(left - right) <= 1 && isBalanced(node.left) && isBalanced(node.right)) {
+            return true;
+        }
+        return false;
+    }    
+
+    void printLevel(Node node, int level) {
+        if (node == null) {
+            return;
+        }
+
+        if (level == 1) {
+            System.out.print(node.value + " ");
+        }
+        else if (level > 1) {
+            printLevel(node.left, level - 1);
+            printLevel(node.right, level - 1);
+        }
+    }
+
+    void printLevels() {
+        for (int i = 1; i <= height(); i++) {
+            printLevel(root, i);
+        }
+    }
+
+    void printBreathFirst() {
+        if (root == null) {
+            return;
+        }
+
+        Queue<Node> q = new LinkedList<>();
+        q.add(root);
+        Node current = root;
+        while(!q.isEmpty()) {
+            current = q.remove();
+            System.out.print(current.value + " ");
+            if (current.left != null) {
+                q.add(current.left);
+            }
+            if (current.right != null) {
+                q.add(current.right);
+            }
+        }
+    }
+
+
+    public static void main(String args[]) {
+        // System.out.println("test");
+        BiTree3 tree = new BiTree3();
+        tree.root = new Node(1);
+        tree.root.left = new Node(2);
+        tree.root.right = new Node(3);
+        tree.root.left.right = new Node(4);
+        tree.root.left.left = new Node(5);
+        tree.root.right.left = new Node(6);
+        tree.printLevels();
+        System.out.println();
+        tree.printBreathFirst();
+    }
+}

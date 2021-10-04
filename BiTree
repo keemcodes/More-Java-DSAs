@@ -1,0 +1,216 @@
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
+
+class Node {
+    Node left, right;
+    int value;
+
+    Node(int value) {
+        this.value = value;
+        left = right = null;
+    }
+    @Override
+    public String toString() {
+        return "Node=" + value;
+    }
+    
+}
+
+class BiTree {
+
+
+
+    void insert(int value) {
+        Node node = new Node(value);
+
+        if (root == null) {
+            root = node;
+            return;
+        }
+        Node current = root;
+        while (true) {
+            if (current.value < value) {
+                if (current.left != null) {
+                    current = current.left;
+                    continue;
+                }
+                else {
+                    current.left = node;
+                    break;
+                }
+            }
+            else if (current.value > value) {
+                if (current.right != null) {
+                    current = current.right;
+                    continue;
+                }
+                else {
+                    current.right = node;
+                    break;
+                }
+            }
+            else {
+                System.out.println("cant insert duplicate nodes");
+                return;
+            }
+        }
+    }
+
+    int height() {
+        return height(root);
+    }
+
+    int height(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        if (node.left == null && node.right == null) {
+            return 1;
+        }
+
+        return 1 + Math.max(height(node.left), height(node.right));
+    }
+
+    void printGivenLevel(Node node, int level) {
+        if (node == null) { 
+            return;
+        }
+        if (level == 1) {
+            System.out.print(node.value + " ");
+        }
+        else if (level > 1) {
+            printGivenLevel(node.left, level - 1);
+            printGivenLevel(node.right, level - 1);
+        }
+    }
+
+    void printLevels() {
+        for (int i = 1; i <= height(); i++) {
+            printGivenLevel(root, i);
+            System.out.println();
+        }
+    }
+
+    // Breadth First / Level Order Traversal
+    // 1). Initialize a linked list queue
+    // 2). Add root to queue
+    // 3). Loop while queue isn't empty
+    // 4). In loop, dequeue and process (print)
+    // 5). Process the child nodes (if left/right isnt null add to queue)
+    void printLevelOrder() {
+        if (root == null) {
+            return;
+        }        
+        Queue<Node> q = new LinkedList<>();
+        q.add(root);
+        while (!q.isEmpty()) {
+            Node node = q.remove();
+            System.out.print(node.value + " ");
+            if (node.left != null) {
+                q.add(node.left);
+            }
+            if (node.right != null) {
+                q.add(node.right);
+            }
+        }
+    }
+
+    // Depth First Traversal - Preorder (Same lines as level order except we use as a stack)
+    // 1). Initialize a stack
+    // 2). Add root to stack
+    // 3). Loop while stack isn't empty
+    // 4). In loop, pop and process (print)
+    // 5). Process the child nodes (if left/right isnt null push to stack)    
+    void printPreOrder() {
+        if (root == null) {
+            return;
+        }
+        Stack<Node> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            Node node = stack.pop();
+            System.out.print(node.value + " ");
+            if (node.right != null) {
+                stack.push(node.right);
+            }
+            if (node.left != null) {
+                stack.push(node.left);
+            }
+        }
+    }
+
+    // Depth First Traversal - Inorder
+    // 1). Initialize a stack
+    // 2). Initialize a node variable to track our current node
+    // 3). Loop while current is not null and stakc is not empty
+    // 4). Loop while current is not null
+    // 5). Inner loop, Push current to stack and increment current to left child.
+    // 6). Outter loop, pop stack and process node
+    // 7). Increment to right child node.
+    void printInOrder() {
+        if (root == null) {
+            return;
+        }
+        Stack<Node> stack = new Stack<>();
+        Node current = root;
+        while (current != null || !stack.isEmpty()) {
+            while (current != null) {
+                stack.push(current);
+                current = current.left;
+            }
+            current = stack.pop();
+            System.out.print(current.value + " ");
+            current = current.right;
+        }
+    }
+
+    void insertLevelOrder(int value) {
+        Node node = new Node(value);
+        if (root == null) {
+            root = node;
+            return;
+        }
+        Queue<Node> q = new LinkedList<>();
+        q.add(root);
+
+        while(!q.isEmpty()) {
+            var current = q.remove();
+            if (current.left == null) {
+                current.left = node;
+                break;
+            }
+            else {
+                q.add(current.left);
+            }
+            if (current.right == null) {
+                current.right = node;
+                break;
+            }
+            else {
+                q.add(current.right);
+            }
+        }
+    }
+
+    
+
+
+
+    Node root;
+    public static void main(String args[]) {
+        var go = new BiTree();
+        System.out.println("hi");
+        go.root = new Node(1);
+        go.root.left = new Node(2);
+        go.root.right = new Node(3);
+        go.root.left.left = new Node(4);
+        go.root.left.right = new Node(5);
+        // go.insert(12);
+        // go.insertLevelOrder(12);
+        // go.printGivenLevel(root, 3);
+        go.printPreOrder();
+        System.out.println();
+        go.printInOrder();
+    }
+}
